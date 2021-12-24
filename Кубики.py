@@ -27,14 +27,32 @@ def load_image(name, colorkey=None):
 
 
 if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 1000, 1000
+    screen = pygame.display.set_mode(size)
+    cubes_sprites = pygame.sprite.Group()
+    sprite1 = pygame.sprite.Sprite()
+    sprite2 = pygame.sprite.Sprite()
     running = True
     while running:
         for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    image1 = load_image(nums[random.choice(range(1, 7))])
-                    image2 = load_image(nums[random.choice(range(1, 7))])
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                screen.fill(pygame.Color('white'))
+                sprite1.image = load_image(nums[random.choice(range(1, 7))] + '.png')
+                sprite1.rect = sprite1.image.get_rect()
+                cubes_sprites.add(sprite1)
+                sprite2.image = load_image(nums[random.choice(range(1, 7))] + '.png')
+                sprite2.rect = sprite2.image.get_rect()
+                cubes_sprites.add(sprite2)
+                sprite1.rect.x = 5
+                sprite1.rect.y = 20
+                sprite2.rect.x = 5 + 40
+                sprite2.rect.y = 20
+                cubes_sprites.draw(screen)
+            pygame.display.flip()
+        pygame.quit()
 
 
 
