@@ -1,92 +1,92 @@
-150 0 red
-180 0 red
-210 0 white
-240 0 white
-180 30 white
-210 30 pink
-240 30 white
-180 60 white
-210 60 pink
-240 60 white
-150 90 green
-180 90 green
-210 90 pink
-240 90 green
-270 90 green
-180 120 white
-210 120 pink
-240 120 white
-90 150 green
-180 150 white
-210 150 pink
-240 150 white
-330 150 green
-420 150 red
-0 180 white
-30 180 white
-60 180 white
-90 180 green
-120 180 white
-150 180 white
-180 180 white
-210 180 blue
-240 180 white
-270 180 white
-300 180 white
-330 180 green
-360 180 white
-390 180 white
-420 180 red
-0 210 white
-30 210 pink
-60 210 pink
-90 210 pink
-120 210 pink
-150 210 pink
-180 210 blue
-210 210 blue
-240 210 blue
-270 210 pink
-300 210 pink
-330 210 pink
-360 210 pink
-390 210 pink
-420 210 white
-0 240 red
-30 240 white
-60 240 white
-90 240 green
-120 240 white
-150 240 white
-180 240 white
-210 240 blue
-240 240 white
-270 240 white
-300 240 white
-330 240 green
-360 240 white
-390 240 white
-420 240 white
-0 270 red
-180 270 white
-210 270 pink
-240 270 white
-330 270 green
-180 300 white
-210 300 pink
-240 300 white
-150 330 green
-180 330 green
-210 330 pink
-240 330 green
-270 330 green
-180 360 white
-210 360 pink
-240 360 white
-180 390 white
-210 390 pink
-240 390 white
-180 420 white
-210 420 white
-240 420 red
-270 420 red
+150 0 red 1
+180 0 red 2
+210 0 white 3
+240 0 white 4
+180 30 white 5
+210 30 pink 6
+240 30 white 7
+180 60 white 8
+210 60 pink 9
+240 60 white 10
+150 90 green 11
+180 90 green 12
+210 90 pink 13
+240 90 green 14
+270 90 green 15
+180 120 white 16
+210 120 pink 17
+240 120 white 18
+90 150 green 19
+180 150 white 20
+210 150 pink 21
+240 150 white 22
+330 150 green 23
+420 150 red 24
+0 180 white 25
+30 180 white 26
+60 180 white 27
+90 180 green 28
+120 180 white 29
+150 180 white 30
+180 180 white 31
+210 180 blue 32
+240 180 white 33
+270 180 white 34
+300 180 white 35
+330 180 green 36
+360 180 white 37
+390 180 white 38
+420 180 red 39
+0 210 white 40
+30 210 pink 41
+60 210 pink 42
+90 210 pink 43
+120 210 pink 44
+150 210 pink 45
+180 210 blue 46
+210 210 blue 47
+240 210 blue 48
+270 210 pink 49
+300 210 pink 50
+330 210 pink 51
+360 210 pink 52
+390 210 pink 53
+420 210 white 54
+0 240 red 55
+30 240 white 56
+60 240 white 57
+90 240 green 58
+120 240 white 59
+150 240 white 60
+180 240 white 61
+210 240 blue 62
+240 240 white 63
+270 240 white 64
+300 240 white 65
+330 240 green 66
+360 240 white 67
+390 240 white 68
+420 240 white 69
+0 270 red 70
+180 270 white 71
+210 270 pink 72
+240 270 white 73
+330 270 green 74
+180 300 white 75
+210 300 pink 76
+240 300 white 77
+150 330 green 78
+180 330 green 79
+210 330 pink 80
+240 330 green 81
+270 330 green 82
+180 360 white 83
+210 360 pink 84
+240 360 white 85
+180 390 white 86
+210 390 pink 87
+240 390 white 88
+180 420 white 89
+210 420 white 90
+240 420 red 91
+270 420 red 92
