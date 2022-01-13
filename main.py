@@ -32,15 +32,18 @@ class Dice(pygame.sprite.Sprite):
               5: "dice5",
               6: "dice6"}
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, num):
         super().__init__()
         self.image = pygame.image.load("dice1.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.num = num
 
     def change_image(self):
-        self.image = pygame.image.load(f"dice{random.randint(1, 6)}.png")
+        res = random.randint(1, 6)
+        dice_values[self.num] = res
+        self.image = pygame.image.load(f"dice{res}.png")
 
 
 class Chip(pygame.sprite.Sprite):
@@ -65,12 +68,16 @@ if __name__ == '__main__':
     load_field()
 
     chip = Chip("yellow", 17)
+    chip2 = Chip("black", 5)
+    chips = [chip2, chip]
     all_sprites.add(chip)
+    all_sprites.add(chip2)
 
-    dice1 = Dice(350, 450)
-    dice2 = Dice(500, 450)
+    dice1 = Dice(350, 450, 0)
+    dice2 = Dice(500, 450, 1)
     all_sprites.add(dice1)
     all_sprites.add(dice2)
+    dice_values = [0, 0]
 
     running = True
     while running:
@@ -80,11 +87,23 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 dice1.change_image()
                 dice2.change_image()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    for chip in chips:
+                        if chip.rect.collidepoint(event.pos):
+                            if dice_values[0]:
+                                chip.cell_number += dice_values[0]
+                                dice_values[0] = 0
+                            else:
+                                chip.cell_number += dice_values[1]
+                                dice_values[1] = 0
 
-        for cell in cells:
-            if cell.number == chip.cell_number:
-                chip.rect.x = cell.rect.x + 5
-                chip.rect.y = cell.rect.y + 5
+
+        for chip in chips:
+            for cell in cells:
+                if cell.number == chip.cell_number:
+                    chip.rect.x = cell.rect.x + 5
+                    chip.rect.y = cell.rect.y + 5
 
 
 
