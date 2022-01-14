@@ -69,19 +69,19 @@ class Menu:
                 surface.blit(font.render(i[2], 1, i[3]), (i[0], i[1] - 30))
 
     def menu(self):
-        done = True
+        running = True
         font_menu = pygame.font.Font(None, 50)
         pygame.key.set_repeat(0, 0)
         pygame.mouse.set_visible(True)
         item = 0
-        while done:
+        while running:
             info.fill((0, 100, 200))
             screen.fill((0, 100, 200))
 
             mp = pygame.mouse.get_pos()
             for i in self.items:
-                if mp[0] > i[0] and mp[0] < i[0] + 155 and mp[1] > i[1] and mp[1] < i[1] + 50:
-                    punkt = i[5]
+                if (mp[0] > i[0]) and (mp[0] < i[0] + 155) and (mp[1] > i[1]) and (mp[1] < i[1] + 50):
+                    item = i[5]
             self.render(screen, font_menu, item)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -97,7 +97,7 @@ class Menu:
                             item += 1
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if item == 0:
-                        done = False
+                        running = False
                     elif item == 1:
                         exit()
             screen.blit(info, (0, 0))
