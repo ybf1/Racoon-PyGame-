@@ -33,6 +33,8 @@ if __name__ == '__main__':
     cubes_sprites = pygame.sprite.Group()
     sprite1 = pygame.sprite.Sprite()
     sprite2 = pygame.sprite.Sprite()
+    cubes_sprites.add(sprite1)
+    cubes_sprites.add(sprite2)
     running = True
     while running:
         for event in pygame.event.get():
@@ -42,10 +44,8 @@ if __name__ == '__main__':
                 screen.fill(pygame.Color('white'))
                 sprite1.image = load_image(nums[random.choice(range(1, 7))] + '.png')
                 sprite1.rect = sprite1.image.get_rect()
-                cubes_sprites.add(sprite1)
                 sprite2.image = load_image(nums[random.choice(range(1, 7))] + '.png')
                 sprite2.rect = sprite2.image.get_rect()
-                cubes_sprites.add(sprite2)
                 sprite1.rect.x = 5
                 sprite1.rect.y = 20
                 sprite2.rect.x = 5 + 40
