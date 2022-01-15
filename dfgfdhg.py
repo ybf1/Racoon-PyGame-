@@ -116,6 +116,8 @@ if __name__ == '__main__':
     WIDTH, HEIGHT = 700, 600
     FPS = 60
     clock = pygame.time.Clock()
+    pygame.mixer.music.load('music.mp3')
+    pygame.mixer.music.play(loops=-1)
 
     all_sprites = pygame.sprite.Group()
     cells = []
@@ -156,7 +158,14 @@ if __name__ == '__main__':
                             else:
                                 chip.cell_number += dice_values[1]
                                 dice_values[1] = 0
-
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                pygame.mixer.music.pause()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                pygame.mixer.music.unpause()
+                pygame.mixer.music.set_volume(0.5)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+                pygame.mixer.music.unpause()
+                pygame.mixer.music.set_volume(1)
         #
         # for chip in chips:
         #     for cell in cells:
