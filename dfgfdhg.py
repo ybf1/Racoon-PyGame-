@@ -98,6 +98,7 @@ class Menu:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     if item == 0:
                         running = False
+                        pygame.mixer.music.unpause()
                     elif item == 1:
                         exit()
             screen.blit(info, (0, 0))
@@ -145,9 +146,9 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 dice1.change_image()
                 dice2.change_image()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    game.menu()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.mixer.music.pause()
+                game.menu()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     for chip in chips:
