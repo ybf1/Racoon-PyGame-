@@ -108,34 +108,15 @@ class Menu:
             pygame.display.flip()
 
 
-def is_free_red():
+def make_false(num):
     for cell in cells:
-        if cell.number == 1 and cell.is_free:
-            cell.is_free = False #вот эту строчку в отдельную функцию
-            return True
-    return False
+        if cell.number == num:
+            cell.is_free = False
 
 
-def is_free_green():
+def is_free(num):
     for cell in cells:
-        if cell.number == 43 and cell.is_free:
-            cell.is_free = False #вот эту строчку в отдельную функцию
-            return True
-    return False
-
-
-def is_free_blue():
-    for cell in cells:
-        if cell.number == 29 and cell.is_free:
-            cell.is_free = False #вот эту строчку в отдельную функцию
-            return True
-    return False
-
-
-def is_free_yellow():
-    for cell in cells:
-        if cell.number == 15 and cell.is_free:
-            cell.is_free = False #вот эту строчку в отдельную функцию
+        if cell.number == num and cell.is_free:
             return True
     return False
 
@@ -157,10 +138,13 @@ if __name__ == '__main__':
     all_sprites = pygame.sprite.Group()
     cells = []
     chips = []
+    red_chips = []
+    green_chips = []
+    blue_chips = []
+    yellow_chips = []
+    chips_groups = {0: red_chips, 1: green_chips, 2: blue_chips, 3: yellow_chips}
 
     load_field()
-    cell1 = cells[0]
-    print(cell1)
 
     dice1 = Dice(350, 450, 0)
     dice2 = Dice(500, 450, 1)
@@ -192,88 +176,159 @@ if __name__ == '__main__':
                         if chip.rect.collidepoint(event.pos):
                             if dice_values[0]:
                                 for cell in cells:
-                                    if cell.number == chip.cell_number:
-                                        cell.is_free = True
-                                chip.cell_number += dice_values[0]
-                                for cell in cells:
-                                    if cell.number == chip.cell_number:
-                                        cell.is_free = False
-                                dice_values[0] = 0
+                                    if cell.number == chip.cell_number + dice_values[0] and cell.is_free:
+                                        can_move = True
+                                    elif cell.number == chip.cell_number + dice_values[0] and not cell.is_free:
+                                        can_move = False
+                                        n = cell.number
+                                print(can_move)
+
+                                if can_move:
+                                    for cell in cells:
+                                        if cell.number == chip.cell_number:
+                                            cell.is_free = True
+                                            print(cell.number, cell.is_free)
+                                    chip.cell_number += dice_values[0]
+                                    for cell in cells:
+                                        if cell.number == chip.cell_number:
+                                            cell.is_free = False
+                                            print(cell.number, cell.is_free)
+                                    dice_values[0] = 0
+                                else:
+                                    for chip1 in chips:
+                                        if chip1.cell_number == n and chip1.player == chip.player:
+                                            can_eat = False
+                                        elif chip1.cell_number == n and chip1.player != chip.player:
+                                            can_eat = True
+                                    if can_eat:
+                                        for chip1 in chips:
+                                            if chip1.cell_number == n:
+                                                chip1.kill()
+                                        for cell in cells:
+                                            if cell.number == chip.cell_number:
+                                                cell.is_free = True
+                                        chip.cell_number += dice_values[1]
+                                        for cell in cells:
+                                            if cell.number == chip.cell_number:
+                                                cell.is_free = False
+                                        dice_values[0] = 0
                             else:
                                 for cell in cells:
-                                    if cell.number == chip.cell_number:
-                                        cell.is_free = True
-                                chip.cell_number += dice_values[1]
-                                for cell in cells:
-                                    if cell.number == chip.cell_number:
-                                        cell.is_free = False
-                                dice_values[1] = 0
+                                    if cell.number == chip.cell_number + dice_values[1] and cell.is_free:
+                                        can_move = True
+                                    elif cell.number == chip.cell_number + dice_values[1] and not cell.is_free:
+                                        can_move = False
+                                        n = cell.number
+                                print(can_move)
+
+                                if can_move:
+                                    for cell in cells:
+                                        if cell.number == chip.cell_number:
+                                            cell.is_free = True
+                                            print(cell.number, cell.is_free)
+                                    chip.cell_number += dice_values[1]
+                                    for cell in cells:
+                                        if cell.number == chip.cell_number:
+                                            cell.is_free = False
+                                            print(cell.number, cell.is_free)
+                                    dice_values[1] = 0
+                                else:
+                                    for chip1 in chips:
+                                        if chip1.cell_number == n and chip1.player == chip.player:
+                                            can_eat = False
+                                        elif chip1.cell_number == n and chip1.player != chip.player:
+                                            can_eat = True
+                                    if can_eat:
+                                        for chip1 in chips:
+                                            if chip1.cell_number == n:
+                                                chip1.kill()
+                                        for cell in cells:
+                                            if cell.number == chip.cell_number:
+                                                cell.is_free = True
+                                        chip.cell_number += dice_values[1]
+                                        for cell in cells:
+                                            if cell.number == chip.cell_number:
+                                                cell.is_free = False
+                                        dice_values[1] = 0
                 if event.button == 3:
                     for cell in cells:
                         if cell.rect.collidepoint(event.pos) and cell.number == 1.1:
                             if current_player == 0 and players_chips["red"] <= 5:
-                                if is_free_red():
+                                if is_free(1.0):
                                     print(1)
                                     if dice_values[0]:
                                         chip = Chip("pink", 1)
                                         all_sprites.add(chip)
+                                        red_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[0] = 0
                                         players_chips["red"] += 1
+                                        make_false(cell.number)
                                     elif dice_values[1]:
                                         chip = Chip("pink", 1)
                                         all_sprites.add(chip)
+                                        red_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[1] = 0
                                         players_chips["red"] += 1
+                                        make_false(cell.number)
                         if cell.rect.collidepoint(event.pos) and cell.number == 43.1:
                             if current_player == 1 and players_chips["green"] <= 5:
-                                if is_free_green():
-                                    print(1)
+                                if is_free(43.0):
                                     if dice_values[0]:
                                         chip = Chip("green", 43)
                                         all_sprites.add(chip)
+                                        green_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[0] = 0
                                         players_chips["green"] += 1
+                                        make_false(cell.number)
                                     elif dice_values[1]:
                                         chip = Chip("green", 43)
                                         all_sprites.add(chip)
+                                        green_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[1] = 0
                                         players_chips["green"] += 1
+                                        make_false(cell.number)
                         if cell.rect.collidepoint(event.pos) and cell.number == 29.1:
                             if current_player == 2 and players_chips["blue"] <= 5:
-                                if is_free_blue():
-                                    print(1)
+                                if is_free(29.0):
                                     if dice_values[0]:
                                         chip = Chip("blue", 29)
                                         all_sprites.add(chip)
+                                        blue_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[0] = 0
                                         players_chips["blue"] += 1
+                                        make_false(cell.number)
                                     elif dice_values[1]:
                                         chip = Chip("blue", 29)
                                         all_sprites.add(chip)
+                                        blue_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[1] = 0
                                         players_chips["blue"] += 1
+                                        make_false(cell.number)
                         if cell.rect.collidepoint(event.pos) and cell.number == 15.1:
                             if current_player == 3 and players_chips["yellow"] <= 5:
-                                if is_free_yellow():
-                                    print(1)
+                                if is_free(15.0):
                                     if dice_values[0]:
                                         chip = Chip("yellow", 15)
                                         all_sprites.add(chip)
+                                        yellow_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[0] = 0
                                         players_chips["yellow"] += 1
+                                        make_false(cell.number)
                                     elif dice_values[1]:
                                         chip = Chip("yellow", 15)
                                         all_sprites.add(chip)
+                                        yellow_chips.append(chip)
                                         chips.append(chip)
                                         dice_values[1] = 0
                                         players_chips["yellow"] += 1
+                                        make_false(cell.number)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
                 pygame.mixer.music.pause()
@@ -285,6 +340,8 @@ if __name__ == '__main__':
                 pygame.mixer.music.set_volume(1)
 
         for chip in chips:
+            if chip.cell_number > 56:
+                chip.cell_number -= 56
             for cell in cells:
                 if cell.number == chip.cell_number:
                     chip.rect.x = cell.rect.x + 5
