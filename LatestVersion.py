@@ -85,7 +85,7 @@ class FinalScreen:
             screen.blit(screen, (0, 30))
             pygame.display.flip()
             pygame.mixer.music.pause()
-            time.sleep(10)
+            time.sleep(5)
             sys.exit()
 
 
@@ -159,7 +159,7 @@ if __name__ == '__main__':
               (305, 320, 'Exit', (11, 0, 77), (250, 250, 30), 1)]
     WINNER = 'TODO'
     final_text = [(250, 250, 'Game over', (11, 0, 77), (250, 250, 30), 0),
-                  (180, 300, f'Победил игрок {WINNER}', (11, 0, 77), (250, 250, 30), 1)]
+                  (165, 300, f'Победил игрок {WINNER}', (11, 0, 77), (250, 250, 30), 1)]
     game = Menu(items)
     game.menu()
     final = FinalScreen(final_text)
