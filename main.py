@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 import os
+import time
 
 
 class Cell(pygame.sprite.Sprite):
@@ -9,8 +10,7 @@ class Cell(pygame.sprite.Sprite):
         super().__init__()
         self.number = number
         self.is_free = True
-        self.image = pygame.Surface((30, 30))
-        self.image.fill(color)
+        self.image = pygame.image.load(f"{color}.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -59,6 +59,35 @@ class Chip(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.count = 1
         self.on_finish = False
+
+
+class FinalScreen:
+    def __init__(self, items=[400, 350, 'Item', (250, 250, 30), (250, 30, 250)]):
+        self.items = items
+
+    def render(self, surface, font, num_item):
+        for i in self.items:
+            if num_item == i[5]:
+                surface.blit(font.render(i[2], 1, i[4]), (i[0], i[1] - 30))
+            else:
+                surface.blit(font.render(i[2], 1, i[3]), (i[0], i[1] - 30))
+
+    def finscreen(self):
+        running = True
+        font_menu = pygame.font.Font(None, 50)
+        pygame.key.set_repeat(0, 0)
+        pygame.mouse.set_visible(True)
+        item = 0
+        while running:
+            info.fill((0, 100, 200))
+            screen.fill((0, 100, 200))
+            self.render(screen, font_menu, item)
+            screen.blit(info, (0, 0))
+            screen.blit(screen, (0, 30))
+            pygame.display.flip()
+            pygame.mixer.music.pause()
+            time.sleep(5)
+            sys.exit()
 
 
 class Menu:
@@ -127,10 +156,14 @@ if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((700, 600))
     info = pygame.Surface((800, 30))
-    items = [(350, 300, 'Play', (11, 0, 77), (250, 250, 30), 0),
-              (350, 340, 'Exit', (11, 0, 77), (250, 250, 30), 1)]
+    items = [(305, 280, 'Play', (11, 0, 77), (250, 250, 30), 0),
+             (305, 320, 'Exit', (11, 0, 77), (250, 250, 30), 1)]
     game = Menu(items)
     game.menu()
+    WINNER = 'TODO'
+    final_text = [(250, 250, 'Game over', (11, 0, 77), (250, 250, 30), 0),
+                  (165, 300, 'WINNER', (11, 0, 77), (250, 250, 30), 1)]
+    final = FinalScreen(final_text)
     WIDTH, HEIGHT = 700, 600
     FPS = 60
     clock = pygame.time.Clock()
@@ -375,24 +408,25 @@ if __name__ == '__main__':
                 chip.kill()
                 players_chips["yellow"][1] -= 1
 
-
             for cell in cells:
                 if cell.number == chip.cell_number:
                     chip.rect.x = cell.rect.x + 5
                     chip.rect.y = cell.rect.y + 5
 
         if players_chips["pink"][1] == 0:
-            print("red won")
+            final_text[1] = (165, 300, 'Победил игрок PINK', (11, 0, 77), (250, 250, 30), 1)
+            final.finscreen()
         if players_chips["green"][1] == 0:
-            print("green won")
+            final_text[1] = (165, 300, 'Победил игрок GREEN', (11, 0, 77), (250, 250, 30), 1)
+            final.finscreen()
         if players_chips["blue"][1] == 0:
-            print("blue won")
+            final_text[1] = (165, 300, 'Победил игрок BLUE', (11, 0, 77), (250, 250, 30), 1)
+            final.finscreen()
         if players_chips["yellow"][1] == 0:
-            print("yellow won")
+            final_text[1] = (165, 300, 'Победил игрок YELLOW', (11, 0, 77), (250, 250, 30), 1)
+            final.finscreen()
 
-
-
-        screen.fill("black")
+        screen.fill("brown")
         all_sprites.draw(screen)
         pygame.display.flip()
 
