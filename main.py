@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
     current_player = -1
     players = ["pink", "green", "blue", "yellow"]
-    players_chips = {"pink": [0, 5],
+    players_chips = {"pink": [0, 1],
                      "green": [0, 5],
                      "blue": [0, 5],
                      "yellow": [0, 5]}
@@ -241,7 +241,7 @@ if __name__ == '__main__':
                                         for chip1 in chips:
                                             if chip1.cell_number == n:
                                                 chip1.kill()
-                                                players_chips[chip1.player] -= 1
+                                                players_chips[chip1.player][0] -= 1
                                         for cell in cells:
                                             if cell.number == chip.cell_number:
                                                 cell.is_free = True
@@ -292,6 +292,34 @@ if __name__ == '__main__':
                                             if cell.number == chip.cell_number:
                                                 cell.is_free = False
                                         dice_values[1] = 0
+                    for chip in chips:
+                        if chip.cell_number > 56 and chip.player != "pink":
+                            chip.cell_number -= 56
+                        elif (chip.count > 56 and chip.count < 98) and chip.player == "pink" and not chip.on_finish:
+                            chip.cell_number = 99 + (chip.count - 56)
+                        if chip.player == "pink" and chip.count > 61:
+                            chip.kill()
+                            players_chips["pink"][1] -= 1
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "green" and not chip.on_finish:
+                            chip.cell_number = 199 + (chip.count - 56)
+                        if chip.player == "green" and chip.cell_number > 205:
+                            chip.kill()
+                            players_chips["green"][1] -= 1
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "blue" and not chip.on_finish:
+                            chip.cell_number = 299 + (chip.count - 56)
+                        if chip.player == "blue" and chip.cell_number > 305:
+                            chip.kill()
+                            players_chips["blue"][1] -= 1
+                            print(players_chips["blue"][1])
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "yellow" and not chip.on_finish:
+                            chip.cell_number = 399 + (chip.count - 56)
+                        if chip.player == "yellow" and chip.cell_number > 405:
+                            chip.kill()
+                            players_chips["yellow"][1] -= 1
+
                 if event.button == 3:
                     for cell in cells:
                         if cell.rect.collidepoint(event.pos) and cell.number == 1.1:
@@ -382,32 +410,6 @@ if __name__ == '__main__':
                 pygame.mixer.music.set_volume(1)
 
         for chip in chips:
-            if chip.cell_number > 56 and chip.player != "pink":
-                chip.cell_number -= 56
-            elif chip.cell_number > 56 and chip.player == "pink":
-                chip.cell_number = 99 + (chip.cell_number - 56)
-            if chip.player == "pink" and chip.cell_number > 105:
-                chip.kill()
-                players_chips["pink"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "green" and not chip.on_finish:
-                chip.cell_number = 199 + (chip.count - 56)
-            if chip.player == "green" and chip.cell_number > 205:
-                chip.kill()
-                players_chips["green"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "blue" and not chip.on_finish:
-                chip.cell_number = 299 + (chip.count - 56)
-            if chip.player == "blue" and chip.cell_number > 305:
-                chip.kill()
-                players_chips["blue"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "yellow" and not chip.on_finish:
-                chip.cell_number = 399 + (chip.count - 56)
-            if chip.player == "yellow" and chip.cell_number > 405:
-                chip.kill()
-                players_chips["yellow"][1] -= 1
-
             for cell in cells:
                 if cell.number == chip.cell_number:
                     chip.rect.x = cell.rect.x + 5
@@ -420,6 +422,7 @@ if __name__ == '__main__':
             final_text[1] = (165, 300, 'Победил игрок GREEN', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
         if players_chips["blue"][1] == 0:
+            print(players_chips["blue"][1])
             final_text[1] = (165, 300, 'Победил игрок BLUE', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
         if players_chips["yellow"][1] == 0:
