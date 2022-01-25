@@ -2,7 +2,43 @@ import pygame
 import random
 import sys
 import os
-import time
+
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
+
+
+class Particle(pygame.sprite.Sprite):
+    fire = [load_image("star.png")]
+    for scale in (5, 10, 20):
+        fire.append(pygame.transform.scale(fire[0], (scale, scale)))
+
+    def __init__(self, pos, dx, dy):
+        super().__init__(all_sprites)
+        self.image = random.choice(self.fire)
+        self.rect = self.image.get_rect()
+        self.velocity = [dx, dy]
+        self.rect.x, self.rect.y = pos
+        self.gravity = GRAVITY
+
+    def update(self):
+        self.velocity[1] += self.gravity
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
+        if not self.rect.colliderect(screen_rect):
+            self.kill()
+
+
+def create_particles(position):
+    particle_count = 20
+    numbers = range(-5, 6)
+    for _ in range(particle_count):
+        Particle(position, random.choice(numbers), random.choice(numbers))
 
 
 class Cell(pygame.sprite.Sprite):
@@ -10,8 +46,7 @@ class Cell(pygame.sprite.Sprite):
         super().__init__()
         self.number = number
         self.is_free = True
-        self.image = pygame.Surface((30, 30))
-        self.image.fill(color)
+        self.image = pygame.image.load(f"{color}.png")
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -87,8 +122,9 @@ class FinalScreen:
             screen.blit(screen, (0, 30))
             pygame.display.flip()
             pygame.mixer.music.pause()
-            time.sleep(5)
-            sys.exit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
 
 
 class Menu:
@@ -155,17 +191,18 @@ def is_free(num):
 
 if __name__ == '__main__':
     pygame.init()
+    GRAVITY = 0.5
     screen = pygame.display.set_mode((700, 600))
     info = pygame.Surface((800, 30))
     items = [(305, 280, 'Play', (11, 0, 77), (250, 250, 30), 0),
              (305, 320, 'Exit', (11, 0, 77), (250, 250, 30), 1)]
     game = Menu(items)
     game.menu()
-    WINNER = 'TODO'
     final_text = [(250, 250, 'Game over', (11, 0, 77), (250, 250, 30), 0),
                   (165, 300, 'WINNER', (11, 0, 77), (250, 250, 30), 1)]
     final = FinalScreen(final_text)
     WIDTH, HEIGHT = 700, 600
+    screen_rect = (0, 0, WIDTH, HEIGHT)
     FPS = 60
     clock = pygame.time.Clock()
     pygame.mixer.music.load('music.mp3')
@@ -190,7 +227,7 @@ if __name__ == '__main__':
 
     current_player = -1
     players = ["pink", "green", "blue", "yellow"]
-    players_chips = {"pink": [0, 5],
+    players_chips = {"pink": [0, 1],
                      "green": [0, 5],
                      "blue": [0, 5],
                      "yellow": [0, 5]}
@@ -200,6 +237,8 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_0:
+                create_particles(pygame.mouse.get_pos())
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 dice1.change_image()
                 dice2.change_image()
@@ -218,19 +257,16 @@ if __name__ == '__main__':
                                     elif cell.number == chip.cell_number + dice_values[0] and not cell.is_free:
                                         can_move = False
                                         n = cell.number
-                                print(can_move)
 
                                 if can_move:
                                     for cell in cells:
                                         if cell.number == chip.cell_number:
                                             cell.is_free = True
-                                            print(cell.number, cell.is_free)
                                     chip.cell_number += dice_values[0]
                                     chip.count += dice_values[0]
                                     for cell in cells:
                                         if cell.number == chip.cell_number:
                                             cell.is_free = False
-                                            print(cell.number, cell.is_free)
                                     dice_values[0] = 0
                                 else:
                                     for chip1 in chips:
@@ -242,7 +278,7 @@ if __name__ == '__main__':
                                         for chip1 in chips:
                                             if chip1.cell_number == n:
                                                 chip1.kill()
-                                                players_chips[chip1.player] -= 1
+                                                players_chips[chip1.player][0] -= 1
                                         for cell in cells:
                                             if cell.number == chip.cell_number:
                                                 cell.is_free = True
@@ -259,19 +295,16 @@ if __name__ == '__main__':
                                     elif cell.number == chip.cell_number + dice_values[1] and not cell.is_free:
                                         can_move = False
                                         n = cell.number
-                                print(can_move)
 
                                 if can_move:
                                     for cell in cells:
                                         if cell.number == chip.cell_number:
                                             cell.is_free = True
-                                            print(cell.number, cell.is_free)
                                     chip.cell_number += dice_values[1]
                                     chip.count += dice_values[1]
                                     for cell in cells:
                                         if cell.number == chip.cell_number:
                                             cell.is_free = False
-                                            print(cell.number, cell.is_free)
                                     dice_values[1] = 0
                                 else:
                                     for chip1 in chips:
@@ -293,12 +326,38 @@ if __name__ == '__main__':
                                             if cell.number == chip.cell_number:
                                                 cell.is_free = False
                                         dice_values[1] = 0
+                    for chip in chips:
+                        if chip.cell_number > 56 and chip.player != "pink":
+                            chip.cell_number -= 56
+                        elif (chip.count > 56 and chip.count < 98) and chip.player == "pink" and not chip.on_finish:
+                            chip.cell_number = 99 + (chip.count - 56)
+                        if chip.player == "pink" and chip.count > 61:
+                            chip.kill()
+                            players_chips["pink"][1] -= 1
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "green" and not chip.on_finish:
+                            chip.cell_number = 199 + (chip.count - 56)
+                        if chip.player == "green" and chip.cell_number > 205:
+                            chip.kill()
+                            players_chips["green"][1] -= 1
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "blue" and not chip.on_finish:
+                            chip.cell_number = 299 + (chip.count - 56)
+                        if chip.player == "blue" and chip.cell_number > 305:
+                            chip.kill()
+                            players_chips["blue"][1] -= 1
+
+                        if (chip.count > 56 and chip.count < 98) and chip.player == "yellow" and not chip.on_finish:
+                            chip.cell_number = 399 + (chip.count - 56)
+                        if chip.player == "yellow" and chip.cell_number > 405:
+                            chip.kill()
+                            players_chips["yellow"][1] -= 1
+
                 if event.button == 3:
                     for cell in cells:
                         if cell.rect.collidepoint(event.pos) and cell.number == 1.1:
                             if current_player == 0 and players_chips["pink"][0] <= players_chips["pink"][1]:
                                 if is_free(1.0):
-                                    print(1)
                                     if dice_values[0]:
                                         chip = Chip("pink", 1)
                                         all_sprites.add(chip)
@@ -383,32 +442,6 @@ if __name__ == '__main__':
                 pygame.mixer.music.set_volume(1)
 
         for chip in chips:
-            if chip.cell_number > 56 and chip.player != "pink":
-                chip.cell_number -= 56
-            elif chip.cell_number > 56 and chip.player == "pink":
-                chip.cell_number = 99 + (chip.cell_number - 56)
-            if chip.player == "pink" and chip.cell_number > 105:
-                chip.kill()
-                players_chips["pink"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "green" and not chip.on_finish:
-                chip.cell_number = 199 + (chip.count - 56)
-            if chip.player == "green" and chip.cell_number > 205:
-                chip.kill()
-                players_chips["green"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "blue" and not chip.on_finish:
-                chip.cell_number = 299 + (chip.count - 56)
-            if chip.player == "blue" and chip.cell_number > 305:
-                chip.kill()
-                players_chips["blue"][1] -= 1
-
-            if (chip.count > 56 and chip.count < 98) and chip.player == "yellow" and not chip.on_finish:
-                chip.cell_number = 399 + (chip.count - 56)
-            if chip.player == "yellow" and chip.cell_number > 405:
-                chip.kill()
-                players_chips["yellow"][1] -= 1
-
             for cell in cells:
                 if cell.number == chip.cell_number:
                     chip.rect.x = cell.rect.x + 5
@@ -417,20 +450,23 @@ if __name__ == '__main__':
         if players_chips["pink"][1] == 0:
             final_text[1] = (165, 300, 'Победил игрок PINK', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
+
         if players_chips["green"][1] == 0:
             final_text[1] = (165, 300, 'Победил игрок GREEN', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
+
         if players_chips["blue"][1] == 0:
             final_text[1] = (165, 300, 'Победил игрок BLUE', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
+
         if players_chips["yellow"][1] == 0:
             final_text[1] = (165, 300, 'Победил игрок YELLOW', (11, 0, 77), (250, 250, 30), 1)
             final.finscreen()
 
-
-
-        screen.fill("black")
+        all_sprites.update()
+        screen.fill('brown')
         all_sprites.draw(screen)
         pygame.display.flip()
+        clock.tick(50)
 
     pygame.quit()
